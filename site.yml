@@ -1,0 +1,35 @@
+# Definitions of groups
+#   These define which roles each group will deploy
+#   Hosts are assigned to groups in the inventory file
+
+- hosts: zookeepers
+  tasks:
+  - include_role:
+      name: common
+  - include_role:
+      name: zookeeper
+
+- hosts: kafkas
+  tasks:
+  - include_role:
+      name: common
+  - include_role:
+      name: kafka
+
+- hosts: storm-supervisors
+  vars:
+    supervisor_enabled: true
+  tasks:
+  - include_role:
+      name: common
+  - include_role:
+      name: storm
+
+- hosts: storm-nimbuses
+  vars:
+    nimbus_enabled: true
+  tasks:
+  - include_role:
+      name: common
+  - include_role:
+      name: storm

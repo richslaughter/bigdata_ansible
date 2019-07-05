@@ -1,0 +1,13 @@
+[Unit]
+Description=Apache Storm Nimbus
+Requires=network.target
+After=network.target
+
+[Service]
+User={{ bd_user }}
+Group={{ bd_group }}
+ExecStart={{ storm_install_dir }}/bin/storm --config {{ storm_install_dir }}/conf/storm.yaml nimbus
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

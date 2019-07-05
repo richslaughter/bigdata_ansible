@@ -1,0 +1,12 @@
+storm.zookeeper.servers:
+{% for host in groups['zookeepers'] %}
+  - "{{ hostvars[host]['inventory_hostname'] }}"
+{% endfor %}
+
+nimbus.seeds: ["{{ groups["storm-nimbuses"] | join("\",\"") }}"]
+
+storm.local.dir: "{{storm_data_dir}}"
+
+supervisor.slots.ports:
+    - 6700
+    - 6701

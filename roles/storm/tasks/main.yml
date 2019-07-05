@@ -1,0 +1,62 @@
+- name: Copy Storm
+  copy:
+    src: "apps_repo/{{ storm_repo_file }}"
+    dest: "{{ bd_app_dir }}/{{ storm_repo_file }}"
+
+- name: Create Storm install directory
+  file:
+    path: "{{ storm_install_dir }}"
+    state: directory
+    owner: "{{ bd_user }}"
+
+- name: Extract Storm
+  unarchive:
+    src: "{{ bd_app_dir }}/{{ storm_repo_file }}"
+    dest: "{{ storm_install_dir }}/"
+    remote_src: yes
+    extra_opts:
+    - --strip-components=1
+
+- name: Copy Storm Config
+  template:
+    src: "storm.yaml.j2"
+    dest: "{{ storm_install_dir }}/conf/storm.yaml"
+    owner: "{{ bd_user }}"
+    group: "{{ bd_group }}"
+
+- name: Copy Storm services
+  template:
+    src: "{{ item }}-systemd.j2"
+    dest: /etc/systemd/system/{{ item }}.service
+    owner: root
+    group: root
+  with_items:
+    - storm-supervisor
+    - storm-nimbus
+    - storm-ui
+  become: yes
+
+- name: Start Storm supervisor service
+  systemd:
+    daemon_reload: yes
+    state: restarted
+    name: storm-supervisor
+  become: yes
+  when: supervisor_enabled
+
+- name: Start Storm Nimbus service
+  systemd:
+    daemon_reload: yes
+    state: restarted
+    name: storm-nimbus
+  become: yes
+  when: nimbus_enabled
+
+- name: Start Storm UI service
+  systemd:
+    daemon_reload: yes
+    state: restarted
+    name: storm-ui
+  become: yes
+  when: nimbus_enabled
+

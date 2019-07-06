@@ -21,3 +21,11 @@
     owner: "{{ bd_user }}"
     group: "{{ bd_group }}"
   become: yes
+
+- name: Create Apps Directory
+  file:
+    path: "{{ bd_app_dir }}"
+    state: directory
+    owner: "{{ bd_user }}"
+    group: "{{ bd_group }}"
+  become: yes

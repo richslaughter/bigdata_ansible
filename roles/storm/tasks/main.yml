@@ -42,7 +42,7 @@
     state: restarted
     name: storm-supervisor
   become: yes
-  when: supervisor_enabled
+  when: inventory_hostname in groups['storm-supervisors']
 
 - name: Start Storm Nimbus service
   systemd:
@@ -50,7 +50,7 @@
     state: restarted
     name: storm-nimbus
   become: yes
-  when: nimbus_enabled
+  when: inventory_hostname in groups['storm-nimbuses']
 
 - name: Start Storm UI service
   systemd:
@@ -58,5 +58,5 @@
     state: restarted
     name: storm-ui
   become: yes
-  when: nimbus_enabled
+  when: inventory_hostname in groups['storm-nimbuses']
 

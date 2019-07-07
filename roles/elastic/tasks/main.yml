@@ -4,23 +4,15 @@
     dest: "{{bd_app_dir}}/{{elastic_repo_file}}"
   register: copyelastic
 
-- name: Create Elastic install directory
+- name: Create Elastic directories
   file:
-    path: "{{ elastic_install_dir }}"
+    path: "{{ item }}"
     state: directory
     owner: "{{ bd_user }}"
-
-- name: Create Elastic work directory
-  file:
-    path: "{{ elastic_data_dir }}"
-    state: directory
-    owner: "{{ bd_user }}"
-
-- name: Create Elastic logs directory
-  file:
-    path: "{{ elastic_logs_dir }}"
-    state: directory
-    owner: "{{ bd_user }}"
+  with_items:
+    - "{{ elastic_install_dir }}"
+    - "{{ elastic_data_dir }}"
+    - "{{ elastic_logs_dir }}"
 
 - name: Extract Elastic
   unarchive:

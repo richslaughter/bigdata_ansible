@@ -1,4 +1,5 @@
 zk_repo_file: "apache-zookeeper-3.5.5-bin.tar.gz"
 zk_install_dir: "{{ bd_app_dir }}/zookeeper"
 zk_data_dir: "{{ bd_data_dir }}/zookeeper"
+zk_logs_dir: "{{ bd_logs_dir }}/zookeeper"
 zk_admin_server_port: 8090

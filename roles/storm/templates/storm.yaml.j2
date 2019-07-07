@@ -6,6 +6,7 @@ storm.zookeeper.servers:
 nimbus.seeds: ["{{ groups["storm-nimbuses"] | join("\",\"") }}"]
 
 storm.local.dir: "{{storm_data_dir}}"
+storm.log.dir: "{{storm_logs_dir}}"
 
 supervisor.slots.ports:
     - 6700

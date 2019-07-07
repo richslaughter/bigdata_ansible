@@ -1,4 +1,4 @@
-# Definitions of groups
+# Allocation of roles to groups
 #   These define which roles each group will deploy
 #   Hosts are assigned to groups in the inventory file
 
@@ -21,3 +21,8 @@
   tasks:
   - include_role:
       name: storm
+
+- hosts: elastics
+  tasks:
+  - include_role:
+      name: elastic

@@ -3,18 +3,17 @@
   copy:
     src: "apps_repo/{{zk_repo_file}}"
     dest: "{{bd_app_dir}}/{{zk_repo_file}}"
+  register: copyzk
 
-- name: Create Zookeeper install directory
+- name: Create Zookeeper directories
   file:
-    path: "{{ zk_install_dir }}"
+    path: "{{ item }}"
     state: directory
     owner: "{{bd_user}}"
-
-- name: Create Zookeeper work directory
-  file:
-    path: "{{ zk_data_dir }}"
-    state: directory
-    owner: "{{bd_user}}"
+  with_items:
+    - "{{ zk_install_dir }}"
+    - "{{ zk_data_dir }}"
+    - "{{ zk_logs_dir }}"
 
 - name: Extract Zookeeper
   unarchive:
@@ -23,16 +22,20 @@
     remote_src: yes
     extra_opts:
     - --strip-components=1
+  when: copyzk.changed
 
 - name: Create Zookeeper Id file
   copy:
     dest: "{{ zk_data_dir }}/myid"
     content: "{{ id }}"
 
-- name: Copy Zookeeper config
+- name: Copy Zookeeper config files
   template:
-    src: "zoo.cfg.j2"
-    dest: "{{zk_install_dir}}/conf/zoo.cfg"
+    src: "{{item}}.j2"
+    dest: "{{zk_install_dir}}/conf/{{item}}"
+  with_items:
+    - "zoo.cfg"
+    - "zookeeper-env.sh"
 
 - name: Copy Zookeeper start scripts
   template:
@@ -45,6 +48,6 @@
 - name: Start Zookeeper service
   systemd:
     daemon_reload: yes
-    state: started
+    state: restarted
     name: zookeeper
   become: yes

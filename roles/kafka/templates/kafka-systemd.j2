@@ -7,6 +7,7 @@ After=network.target
 Type=simple
 User={{ bd_user }}
 Group={{ bd_group }}
+Environment=LOG_DIR={{ kafka_logs_dir }}
 ExecStart={{ kafka_install_dir }}/bin/kafka-server-start.sh {{ kafka_install_dir }}/config/server.properties
 ExecStop={{ kafka_install_dir }}/bin/kafka-server-stop.sh
 Restart=on-failure

@@ -7,6 +7,18 @@
   - include_role:
       name: common
 
+- hosts: elastic_with_kibanas
+  tasks:
+  - include_role:
+      name: elastic
+  - include_role:
+      name: kibana
+
+- hosts: zookeepers:elastic_with_kibanas:storm-supervisors:storm-nimbuses:kafkas
+  tasks:  
+  - include_role:
+      name: logstash
+
 - hosts: zookeepers
   tasks:
   - include_role:
@@ -21,8 +33,3 @@
   tasks:
   - include_role:
       name: storm
-
-- hosts: elastics
-  tasks:
-  - include_role:
-      name: elastic

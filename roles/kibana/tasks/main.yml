@@ -1,0 +1,44 @@
+- name: Copy Kibana
+  copy:
+    src: "apps_repo/{{kibana_repo_file}}"
+    dest: "{{bd_app_dir}}/{{kibana_repo_file}}"
+  register: copykibana
+
+- name: Create Kibana directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ bd_user }}"
+  with_items:
+    - "{{ kibana_install_dir }}"
+    - "{{ kibana_data_dir }}"
+    - "{{ kibana_logs_dir }}"
+
+- name: Extract Kibana
+  unarchive:
+    src: "{{ bd_app_dir }}/{{ kibana_repo_file }}"
+    dest: "{{ kibana_install_dir }}/"
+    remote_src: yes
+    extra_opts:
+    - --strip-components=1
+  when: copykibana.changed
+
+- name: Copy Kibana config
+  template:
+    src: "kibana.yml.j2"
+    dest: "{{ kibana_install_dir }}/config/kibana.yml"
+
+- name: Copy Kibana start scripts
+  template:
+    src: "kibana.service.j2"
+    dest: /etc/systemd/system/kibana.service
+    owner: root
+    group: root
+  become: yes
+
+- name: Start Kibana service
+  systemd:
+    daemon_reload: yes
+    state: restarted
+    name: kibana
+  become: yes

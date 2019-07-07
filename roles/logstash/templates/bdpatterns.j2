@@ -1,0 +1,9 @@
+BD_TIMESTAMP %{YEAR}-%{MONTHNUM}-%{MONTHDAY} %{HOUR}:%{MINUTE}:%{SECOND}[\.\,]%{MILLISECOND}
+MILLISECOND \d{3}
+MESSAGE_CONTENT %{GREEDYDATA}
+LOG_TYPE (\w+\.)*\w+
+
+STORM_LOG %{BD_TIMESTAMP:timestamp} %{WORD:loglevel} %{LOG_TYPE:logtype}: %{MESSAGE_CONTENT:content}
+BD_LOG %{BD_TIMESTAMP:timestamp} \[%{DATA:logtype}\] %{WORD:loglevel} %{MESSAGE_CONTENT:content}
+
+BD_LOG_MESSAGE (?:%{BD_LOG}|%{STORM_LOG})

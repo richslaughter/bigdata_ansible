@@ -44,7 +44,6 @@
   - { key: "vm.max_map_count", value: "262144" }
   become: yes
 
-
 - name: Start Elastic service
   systemd:
     daemon_reload: yes

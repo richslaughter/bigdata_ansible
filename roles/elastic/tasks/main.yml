@@ -50,3 +50,6 @@
     state: restarted
     name: elasticsearch
   become: yes
+
+- name: Wait for Elastic to startup
+  wait_for: host={{host_ip}} port={{elastic_port}} delay=5 connect_timeout=1
